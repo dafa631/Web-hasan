@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f4c81" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MITRA GURU" />
+  <title>MITRA GURU — Sistem Supervisi Akademik & Penilaian Kinerja Guru</title>
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --primary-dark: #093256;
+      --primary-light: #e8f1fa;
+      --accent: #d97706;
+      --accent-light: #fef3c7;
+      --success: #059669;
+      --success-light: #d1fae5;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ================= AUTH / LOGIN SCREEN ================= */
+    .auth-wrapper {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      background: #fff;
+    }
+
+    .auth-hero {
+      background: linear-gradient(145deg, #093256 0%, #0f4c81 55%, #1d6fa5 100%);
+      color: #fff;
+      padding: 44px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-hero::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      bottom: -100px;
+      right: -80px;
+      pointer-events: none;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.14);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      width: fit-content;
+      backdrop-filter: blur(4px);
+    }
+
+    .auth-hero h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 20px 0 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .auth-hero p.subtitle {
+      color: #dbeafe;
+      font-size: 15px;
+      max-width: 480px;
+    }
+
+    .demo-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 28px;
+    }
+
+    .demo-box h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #fde68a;
+      margin-bottom: 12px;
+    }
+
+    .demo-btn {
+      width: 100%;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--text);
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .demo-btn:last-child { margin-bottom: 0; }
+    .demo-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.18); }
+    .demo-btn strong { display: block; font-size: 14px; color: var(--primary-dark); }
+    .demo-btn span { font-size: 12px; color: var(--muted); }
+    .demo-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .demo-tag.kepsek { background: #fef3c7; color: #b45309; }
+
+    .auth-form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      background: #f8fafc;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 430px;
+      background: #fff;
+      padding: 34px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e2e8f0;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+    }
+
+    .auth-tab {
+      border: none;
+      background: transparent;
+      padding: 9px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--muted);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .auth-tab.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* ================= FORM ELEMENTS ================= */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.12);
+    }
+
+    .password-wrap { position: relative; }
+    .toggle-pw {
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.18s;
+      font-family: inherit;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #047857; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #b45309; }
+    .btn-outline {
+      background: #fff;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { background: #f8fafc; border-color: #94a3b8; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 12.5px; }
+    .btn-block { width: 100%; }
+
+    .alert-error {
+      background: var(--danger-light);
+      color: #991b1b;
+      padding: 10px 13px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    /* ================= MAIN APP SHELL ================= */
+    .app-shell { display: none; min-height: 100vh; flex-direction: column; }
+
+    .topbar {
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .logo-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .topbar-title h2 { font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .topbar-title span { font-size: 12px; color: #bae6fd; }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .user-pill {
+      background: rgba(255,255,255,0.12);
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-bar {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 24px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+    }
+
+    .nav-btn:hover { color: var(--primary); }
+    .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .container {
+      width: 100%;
+      max-width: 1220px;
+      margin: 24px auto;
+      padding: 0 20px;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 22px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .card-header h3 { font-size: 18px; color: var(--primary-dark); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .stat-card .label { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+    .stat-card .value { font-size: 26px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; }
+
+    /* ================= INSTRUMENT TABLES ================= */
+    .table-responsive { overflow-x: auto; }
+    table.instr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    table.instr-table th, table.instr-table td {
+      border: 1px solid #94a3b8;
+      padding: 9px 10px;
+      vertical-align: middle;
+    }
+
+    table.instr-table thead th {
+      background: #fde047;
+      color: #1e293b;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    table.instr-table tr.summary-row td {
+      background: #fef08a;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .score-radio-cell { text-align: center; width: 42px; }
+    .score-radio-cell input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge-success { background: var(--success-light); color: #065f46; }
+    .badge-warning { background: var(--accent-light); color: #92400e; }
+    .badge-danger { background: var(--danger-light); color: #991b1b; }
+    .badge-info { background: var(--primary-light); color: var(--primary-dark); }
+
+    /* ================= PHOTO GALLERY & UPLOAD ================= */
+    .dropzone {
+      border: 2px dashed #94a3b8;
+      border-radius: 12px;
+      padding: 26px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .dropzone:hover { border-color: var(--primary); background: var(--primary-light); }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .photo-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 125px;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .photo-item .photo-caption {
+      padding: 6px 8px;
+      font-size: 11.5px;
+      color: #334155;
+      background: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .photo-item .remove-photo {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(220, 38, 38, 0.9);
+      color: #fff;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* ================= SIGNATURE PAD ================= */
+    .sig-box {
+      border: 1.5px solid #94a3b8;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .sig-canvas {
+      width: 100%;
+      height: 130px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      background: #fcfcfd;
+      touch-action: none;
+      cursor: crosshair;
+      display: block;
+      margin: 8px 0;
+    }
+
+    /* ================= MODAL & PRINT REPORT ================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .modal-box {
+      background: #fff;
+      width: 100%;
+      max-width: 920px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      padding: 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .official-paper {
+      background: #fff;
+      color: #000;
+      font-family: 'Times New Roman', Times, serif;
+      padding: 24px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .official-paper h2, .official-paper h3 {
+      text-align: center;
+      margin: 2px 0;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+
+    .official-meta { margin: 16px 0; font-size: 14px; }
+    .official-meta td { padding: 2px 6px; }
+
+    .official-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      margin-top: 8px;
+    }
+    .official-table th, .official-table td {
+      border: 1px solid #000;
+      padding: 5px 7px;
+    }
+    .official-table th { background: #fde047 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .official-table tr.sum td { background: #fef08a !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .sig-print-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+      font-size: 13px;
+    }
+    .sig-print-table td {
+      border: 1px solid #000;
+      width: 33.33%;
+      padding: 8px 12px;
+      vertical-align: top;
+      height: 125px;
+      position: relative;
+    }
+
+    .school-stamp {
+      position: absolute;
+      left: 16px;
+      bottom: 24px;
+      width: 82px;
+      height: 82px;
+      border: 2.5px double #1d4ed8;
+      border-radius: 50%;
+      color: #1d4ed8;
+      font-family: Arial, sans-serif;
+      font-size: 8.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transform: rotate(-12deg);
+      opacity: 0.78;
+      pointer-events: none;
+      padding: 6px;
+      line-height: 1.15;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 200;
+      display: none;
+    }
+
+    @media (max-width: 860px) {
+      .auth-wrapper { grid-template-columns: 1fr; }
+      .auth-hero { padding: 32px 24px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        padding: 0;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== 1. AUTH GATE (LOGIN & REGISTER) ==================== -->
+<div id="authScreen" class="auth-wrapper">
+  <div class="auth-hero">
+    <div>
+      <div class="brand-badge">🏫 SMP NEGERI MARGATUNGGAL • JAYALOKA</div>
+      <h1>MITRA GURU</h1>
+      <p class="subtitle">
+        Sistem Informasi Supervisi Akademik, Dokumentasi Pembelajaran Kelas, dan Penilaian Kinerja Guru Terpadu Berbasis Instrumen Resmi.
+      </p>
+
+      <div class="demo-box">
+        <h3>⚡ Akses Cepat Akun Demo (1-Klik Masuk)</h3>
+        <button type="button" class="demo-btn" onclick="quickLogin('kepsek')">
+          <div>
+            <strong>Drs. H. Ahmad Fauzi, M.Pd.</strong>
+            <span>Kepala Sekolah / Supervisor • User: <b>kepsek</b></span>
+          </div>
+          <span class="demo-tag kepsek">Kepala Sekolah</span>
+        </button>
+        <button type="button" class="demo-btn" onclick="quickLogin('guru1')">
+          <div>
+            <strong>Siti Aminah, S.Pd.I.</strong>
+            <span>Guru PAI (Kelas VIII / Genap) • User: <b>guru1</b></span>
+          </div>
+          <span class="demo-tag">Portal Guru</span>
+        </button>
+        <button type="button" class="demo-btn" onclick="quickLogin('guru2')">
+          <div>
+            <strong>Budi Santoso, S.Pd.</strong>
+            <span>Guru IPA (Kelas VII / Ganjil) • User: <b>guru2</b></span>
+          </div>
+          <span class="demo-tag">Portal Guru</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="font-size: 12.5px; color: #bfdbfe; margin-top: 24px;">
+      Mendukung Penyimpanan Offline (LocalStorage), Tanda Tangan Digital & Stempel Kepala Sekolah, serta Cetak Laporan Resmi (PDF).
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button type="button" id="tabLoginBtn" class="auth-tab active" onclick="switchAuthTab('login')">Masuk (Login)</button>
+        <button type="button" id="tabRegBtn" class="auth-tab" onclick="switchAuthTab('register')">Daftar Akun Guru</button>
+      </div>
+
+      <div id="authError" class="alert-error"></div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Masuk Sebagai Peran</label>
+          <select id="loginRole" class="form-control">
+            <option value="kepsek">Kepala Sekolah / Supervisor</option>
+            <option value="guru">Guru Mata Pelajaran</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Username / NIP</label>
+          <input type="text" id="loginUsername" class="form-control" placeholder="Contoh: kepsek atau guru1" required />
+        </div>
+        <div class="form-group">
+          <label>Kata Sandi (Password)</label>
+          <div class="password-wrap">
+            <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan kata sandi (demo: 123456)" required />
+            <button type="button" class="toggle-pw" onclick="togglePw('loginPassword', this)">Lihat</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 8px;">Masuk ke Aplikasi →</button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" style="display:none;" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Nama Lengkap & Gelar</label>
+          <input type="text" id="regName" class="form-control" placeholder="Contoh: Rina Marlina, S.Pd." required />
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>NIP / NUPTK</label>
+            <input type="text" id="regNip" class="form-control" placeholder="19870512..." required />
+          </div>
+          <div class="form-group">
+            <label>Mata Pelajaran</label>
+            <input type="text" id="regMapel" class="form-control" placeholder="Bahasa Indonesia" required />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Username Login</label>
+            <input type="text" id="regUsername" class="form-control" placeholder="rina_guru" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="Minimal 4 karakter" required />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Buat Akun & Masuk</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 2. MAIN APPLICATION SHELL ==================== -->
+<div id="appShell" class="app-shell">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="logo-box">MG</div>
+      <div class="topbar-title">
+        <h2>MITRA GURU — Supervisi Akademik</h2>
+        <span>SMP Negeri Margatunggal • Jayaloka</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <span id="navUserBadge">👤</span>
+        <strong id="navUserName">Pengguna</strong>
+      </div>
+      <button type="button" class="btn btn-danger btn-sm" onclick="logout()">Keluar</button>
+    </div>
+  </header>
+
+  <nav class="nav-bar" id="mainNavBar"></nav>
+
+  <main class="container">
+    <!-- VIEW GURU 1: UPLOAD DOKUMENTASI & PERANGKAT -->
+    <section id="viewGuruUpload" class="app-view" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>📤 Unggah Dokumentasi Pembelajaran & Perangkat Ajar</h3>
+            <p style="font-size:13px; color:var(--muted);">Lengkapi identitas pembelajaran dan unggah bukti foto pelaksanaan KBM di kelas untuk dinilai Kepala Sekolah.</p>
+          </div>
+          <span class="badge badge-info" id="guruFormStatusBadge">Draft Baru</span>
+        </div>
+
+        <form id="guruSubmissionForm" onsubmit="saveGuruSubmission(event)">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Nama Guru</label>
+              <input type="text" id="gNama" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label>NIP / NUPTK</label>
+              <input type="text" id="gNip" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label>Mata Pelajaran</label>
+              <input type="text" id="gMapel" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label>Kelas / Semester</label>
+              <input type="text" id="gKelas" class="form-control" placeholder="Contoh: VIII-A / Genap" required />
+            </div>
+            <div class="form-group">
+              <label>Tanggal Pelaksanaan Supervisi</label>
+              <input type="date" id="gTanggal" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label>Tahun Pelajaran</label>
+              <input type="text" id="gTahun" class="form-control" value="2026/2027" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Deskripsi Singkat Materi & Kegiatan Pembelajaran di Kelas</label>
+            <textarea id="gDeskripsi" class="form-control" rows="2" placeholder="Tuliskan kompetensi dasar, metode yang dipakai, dan ringkasan kegiatan belajar..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Checklist Kelengkapan Perangkat Pembelajaran yang Disiapkan Guru</label>
+            <div id="guruChecklistGrid" class="grid-3" style="background:#f8fafc; padding:14px; border-radius:10px; border:1px solid #e2e8f0;"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Upload Foto Bukti Dokumentasi Pembelajaran di Kelas (Bisa Pilih Banyak Foto)</label>
+            <div class="dropzone" onclick="document.getElementById('photoInput').click()">
+              <div style="font-size:28px;">📸</div>
+              <strong>Klik di sini untuk memilih foto kegiatan pembelajaran kelas</strong>
+              <p style="font-size:12.5px; color:var(--muted); margin-top:4px;">Mendukung JPG, PNG, WEBP (Otomatis dikompresi agar ringan & siap cetak)</p>
+              <input type="file" id="photoInput" accept="image/*" multiple style="display:none;" onchange="handlePhotoUpload(event)" />
+            </div>
+            <div id="guruPhotoPreview" class="photo-grid"></div>
+          </div>
+
+          <div class="grid-2" style="align-items:end; margin-top:18px;">
+            <div class="sig-box">
+              <strong style="font-size:13px;">Tanda Tangan Guru (Yang Disupervisi)</strong>
+              <canvas id="guruSigCanvas" class="sig-canvas" width="380" height="130"></canvas>
+              <button type="button" class="btn btn-outline btn-sm" onclick="clearCanvas('guruSigCanvas')">Hapus Tanda Tangan</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="background:var(--primary-light); padding:14px; border-radius:10px; font-size:13px; color:var(--primary-dark);">
+                <strong>Catatan Pengiriman:</strong> Setelah dikirim, Kepala Sekolah dapat melihat foto dokumentasi kelas dan mengisi skor Instrumen Prasupervisi (Bagian A) serta Persiapan Mengajar (Bagian B).
+              </div>
+              <button type="submit" class="btn btn-primary btn-block" style="padding:13px;">💾 Simpan & Kirim Bukti ke Kepala Sekolah</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW GURU 2: HASIL SUPERVISI SAYA -->
+    <section id="viewGuruResult" class="app-view" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>📊 Status & Rekam Nilai Supervisi Saya</h3>
+            <p style="font-size:13px; color:var(--muted);">Pantau hasil penilaian Kepala Sekolah dan cetak lembar pengesahan resmi.</p>
+          </div>
+        </div>
+        <div id="guruResultContainer"></div>
+      </div>
+    </section>
+
+    <!-- VIEW KEPSEK 1: INSTRUMEN PENILAIAN SUPERVISI -->
+    <section id="viewKepsekAssess" class="app-view" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>📋 Instrumen Supervisi Guru (SMP Negeri Margatunggal)</h3>
+            <p style="font-size:13px; color:var(--muted);">Pilih guru yang disupervisi, periksa bukti foto kelas, dan isi skor Bagian A & Bagian B.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <label style="font-size:13px; font-weight:700;">Pilih Guru:</label>
+            <select id="selectTeacherAssess" class="form-control" style="width:270px;" onchange="loadAssessmentForm(this.value)"></select>
+          </div>
+        </div>
+
+        <!-- BUKTI FOTO DARI GURU -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:16px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <strong style="color:var(--primary-dark);">📸 Bukti Dokumentasi Pembelajaran Kelas yang Diunggah Guru</strong>
+            <span id="assessMetaInfo" class="badge badge-info"></span>
+          </div>
+          <p id="assessDescText" style="font-size:13px; color:#334155; margin:8px 0;"></p>
+          <div id="assessPhotoGallery" class="photo-grid"></div>
+        </div>
+
+        <!-- BAGIAN A: 15 PERTANYAAN PRASUPERVISI -->
+        <h4 style="margin: 14px 0 8px; color:var(--primary-dark);">A. INSTRUMEN PRASUPERVISI (Wawancara Awal & Pemeriksaan Administrasi Pembelajaran)</h4>
+        <div class="table-responsive">
+          <table class="instr-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width:42px;">No</th>
+                <th rowspan="2">Pertanyaan</th>
+                <th colspan="4">Skor Jawaban</th>
+                <th rowspan="2" style="width:220px;">Catatan</th>
+              </tr>
+              <tr>
+                <th>4</th><th>3</th><th>2</th><th>1</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPartA"></tbody>
+            <tfoot>
+              <tr class="summary-row">
+                <td colspan="2" style="text-align:center;">TOTAL NILAI</td>
+                <td colspan="4" style="text-align:center; font-size:16px;" id="totalScoreA">0</td>
+                <td>Maksimal: 60</td>
+              </tr>
+              <tr class="summary-row">
+                <td colspan="2" style="text-align:center;">NILAI AKHIR WAWANCARA AWAL = (Total Nilai / Nilai Max (60)) * 100</td>
+                <td colspan="4" style="text-align:center; font-size:17px; color:#0f4c81;" id="finalScoreA">0.00</td>
+                <td id="gradeBadgeA" style="text-align:center;">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="grid-3" style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin:12px 0 22px; font-size:12.5px;">
+          <div>
+            <strong>Keterangan Skor:</strong><br/>
+            4 = Sangat Baik &nbsp;|&nbsp; 3 = Baik<br/>
+            2 = Cukup &nbsp;|&nbsp; 1 = Kurang
+          </div>
+          <div>
+            <strong>Keterangan Nilai Akhir:</strong><br/>
+            91–100 = Baik Sekali &nbsp;|&nbsp; 81–90 = Baik<br/>
+            71–80 = Cukup &nbsp;|&nbsp; &lt; 71 = Kurang
+          </div>
+          <div>
+            <label style="font-weight:700;">Catatan Umum Supervisor (Bagian A):</label>
+            <input type="text" id="generalNoteA" class="form-control" placeholder="Tulis catatan pembinaan..." style="margin-top:4px;" />
+          </div>
+        </div>
+
+        <!-- BAGIAN B: PERSIAPAN MENGAJAR -->
+        <h4 style="margin: 18px 0 8px; color:var(--primary-dark);">B. PERSIAPAN MENGAJAR (Kelengkapan Perangkat Pembelajaran)</h4>
+        <div class="table-responsive">
+          <table class="instr-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width:42px;">No</th>
+                <th rowspan="2">Komponen</th>
+                <th colspan="2">Dokumen *</th>
+                <th colspan="4">Skor **</th>
+              </tr>
+              <tr>
+                <th style="width:65px;">Ada</th>
+                <th style="width:65px;">Tidak</th>
+                <th>4</th><th>3</th><th>2</th><th>1</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPartB"></tbody>
+            <tfoot>
+              <tr class="summary-row">
+                <td colspan="4" style="text-align:center;">TOTAL SKOR PERSIAPAN MENGAJAR (Maks. 44)</td>
+                <td colspan="4" style="text-align:center; font-size:16px;" id="totalScoreB">0</td>
+              </tr>
+              <tr class="summary-row">
+                <td colspan="4" style="text-align:center;">NILAI AKHIR PERSIAPAN MENGAJAR = (Total / 44) * 100</td>
+                <td colspan="4" style="text-align:center; font-size:16px; color:#059669;" id="finalScoreB">0.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-outline" onclick="openOfficialReport(document.getElementById('selectTeacherAssess').value)">🖨️ Pratinjau Lembar Resmi</button>
+          <button type="button" class="btn btn-success" onclick="saveAssessment()">✅ Simpan Hasil Penilaian Supervisi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW KEPSEK 2: REKAM NILAI & TANDA TANGAN KEPALA SEKOLAH -->
+    <section id="viewKepsekRecords" class="app-view" style="display:none;">
+      <div class="grid-4" style="margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="label">Total Guru Terdata</div>
+          <div class="value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Sudah Dinilai & Disahkan</div>
+          <div class="value" style="color:var(--success);" id="statDone">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Menunggu Supervisi</div>
+          <div class="value" style="color:var(--accent);" id="statPending">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Rata-rata Nilai Akhir</div>
+          <div class="value" style="color:var(--primary);" id="statAvg">0.0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>📑 Rekam Nilai & Pengesahan Tanda Tangan Kepala Sekolah</h3>
+            <p style="font-size:13px; color:var(--muted);">Rekapitulasi nilai supervisi seluruh guru lengkap dengan tanda tangan digital & stempel resmi sekolah.</p>
+          </div>
+          <input type="text" id="searchRecordInput" class="form-control" style="width:250px;" placeholder="🔍 Cari nama guru / mapel..." oninput="renderRecordsTable()" />
+        </div>
+
+        <div class="table-responsive">
+          <table class="instr-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Guru & NIP</th>
+                <th>Mata Pelajaran / Kelas</th>
+                <th>Bukti Foto</th>
+                <th>Nilai A (Prasupervisi)</th>
+                <th>Nilai B (Perangkat)</th>
+                <th>Rata-rata & Predikat</th>
+                <th>Pengesahan Kepsek</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyRecords"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PANEL TANDA TANGAN KEPALA SEKOLAH & SUPERVISOR -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>✍️ Panel Tanda Tangan & Stempel Pengesahan Kepala Sekolah</h3>
+            <p style="font-size:13px; color:var(--muted);">Tanda tangan yang disimpan di sini akan otomatis tercantum pada lembar cetak rekam nilai supervisi.</p>
+          </div>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:700; cursor:pointer;">
+            <input type="checkbox" id="useStampCheck" checked onchange="saveSignatures()" style="width:18px; height:18px; accent-color:var(--primary);" />
+            Tampilkan Stempel Resmi SMP Negeri Margatunggal
+          </label>
+        </div>
+
+        <div class="grid-3">
+          <div class="form-group">
+            <label>Tempat & Tanggal Pengesahan</label>
+            <input type="text" id="signPlaceDate" class="form-control" value="Jayaloka, 19 November 2026" />
+            <label style="margin-top:10px;">Nama Supervisor</label>
+            <input type="text" id="supervisorNameInput" class="form-control" value="Drs. H. Ahmad Fauzi, M.Pd." />
+            <label style="margin-top:10px;">Nama Kepala Sekolah & NIP</label>
+            <input type="text" id="kepsekNameInput" class="form-control" value="Drs. H. Ahmad Fauzi, M.Pd." />
+            <input type="text" id="kepsekNipInput" class="form-control" value="NIP. 19680415 199412 1 002" style="margin-top:6px;" />
+          </div>
+
+          <div class="sig-box">
+            <strong style="font-size:13px;">Tanda Tangan Supervisor</strong>
+            <canvas id="supervisorSigCanvas" class="sig-canvas" width="320" height="130"></canvas>
+            <button type="button" class="btn btn-outline btn-sm" onclick="clearCanvas('supervisorSigCanvas')">Hapus TTD Supervisor</button>
+          </div>
+
+          <div class="sig-box">
+            <strong style="font-size:13px;">Tanda Tangan Kepala Sekolah</strong>
+            <canvas id="kepsekSigCanvas" class="sig-canvas" width="320" height="130"></canvas>
+            <div style="display:flex; gap:8px; justify-content:center;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="clearCanvas('kepsekSigCanvas')">Hapus</button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="saveSignatures()">💾 Simpan Pengesahan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW KEPSEK 3: MANAJEMEN AKUN -->
+    <section id="viewKepsekUsers" class="app-view" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>👥 Manajemen Akun Pengguna MITRA GURU</h3>
+            <p style="font-size:13px; color:var(--muted);">Kelola akun Kepala Sekolah dan Guru yang dapat mengakses aplikasi.</p>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="resetDemoData()">🔄 Reset ke Data Demo Awal</button>
+        </div>
+        <div class="table-responsive">
+          <table class="instr-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Lengkap</th>
+                <th>Peran</th>
+                <th>Username</th>
+                <th>NIP / Mata Pelajaran</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyUsers"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ==================== 3. MODAL PRATINJAU & CETAK DOKUMEN RESMI ==================== -->
+<div id="reportModal" class="modal-backdrop">
+  <div class="modal-box">
+    <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+      <strong>Pratinjau Dokumen Resmi Instrumen Supervisi Guru</strong>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('reportModal')">Tutup ✕</button>
+      </div>
+    </div>
+    <div id="printArea" class="official-paper"></div>
+  </div>
+</div>
+
+<!-- MODAL LIGHTBOX FOTO -->
+<div id="photoModal" class="modal-backdrop" onclick="closeModal('photoModal')">
+  <div style="max-width:820px; text-align:center;">
+    <img id="lightboxImg" src="" style="max-width:100%; max-height:82vh; border-radius:12px; border:3px solid #fff;" />
+    <p id="lightboxCaption" style="color:#fff; margin-top:10px; font-weight:600;"></p>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  /* ==================== DATA MASTER INSTRUMEN (SESUAI DOKUMEN ASLI) ==================== */
+  const QUESTIONS_PART_A = [
+    "Bagaimana cara saudara membuka pelajaran?",
+    "KD/Indikator apa yang saudara sajikan?",
+    "Kompetensi apa yang diharapkan dimiliki siswa?",
+    "Karakter apa dan bagaimana yang saudara akan kembangkan?",
+    "Apakah kaitan materi yang disajikan dengan sisi ukrowi?",
+    "Apakah manfaat materi yang disajikan dengan duniawi?",
+    "Metode apa yang akan saudara gunakan dalam pembelajaran?",
+    "Ceritakan tahapan pembelajaran yang akan saudara sajikan!",
+    "Persiapan tertulis apa saja yang saudara siapkan?",
+    "Adakah materi yang mungkin saudara perkirakan sulit dipahami?",
+    "Adakah alat peraga yang saudara gunakan?",
+    "Masalah apa yang dapat menjadi hambatan siswa dalam belajar dan bagaimana antisipasi saudara?",
+    "Bagaimana cara saudara dalam menentukan ketercapaian kompetensi yang akan dicapai?",
+    "Apakah saudara menggunakan penilaian afektif sebagai acuan observasi sikap siswa?",
+    "Bagaimana cara saudara dalam mengakhiri pembelajaran?"
+  ];
+
+  const COMPONENTS_PART_B = [
+    "Kalender Pendidikan",
+    "Program Tahunan (Prota)",
+    "Program Semester (Promes)",
+    "Silabus / Alur Tujuan Pembelajaran (ATP)",
+    "Rencana Pelaksanaan Pembelajaran (RPP) / Modul Ajar",
+    "Jadwal Tatap Muka",
+    "Agenda Harian Guru",
+    "Daftar Nilai Peserta Didik",
+    "Kriteria Ketuntasan Minimal (KKM / KKTP)",
+    "Daftar Hadir / Absensi Siswa",
+    "Buku Pegangan Guru & Buku Teks Siswa"
+  ];
+
+  const STORAGE_KEY = "MITRA_GURU_MARGATUNGGAL_V2";
+
+  const DEFAULT_STATE = {
+    users: [
+      { id: "u_kepsek", username: "kepsek", password: "123", role: "kepsek", name: "Drs. H. Ahmad Fauzi, M.Pd.", nip: "19680415 199412 1 002", mapel: "Kepala Sekolah / Supervisor" },
+      { id: "u_guru1", username: "guru1", password: "123", role: "guru", name: "Siti Aminah, S.Pd.I.", nip: "19890312 201503 2 004", mapel: "Pendidikan Agama Islam (PAI)" },
+      { id: "u_guru2", username: "guru2", password: "123", role: "guru", name: "Budi Santoso, S.Pd.", nip: "19910721 201902 1 003", mapel: "Ilmu Pengetahuan Alam (IPA)" }
+    ],
+    signatures: {
+      placeDate: "Jayaloka, 19 November 2026",
+      supervisorName: "Drs. H. Ahmad Fauzi, M.Pd.",
+      kepsekName: "Drs. H. Ahmad Fauzi, M.Pd.",
+      kepsekNip: "NIP. 19680415 199412 1 002",
+      useStamp: true,
+      supervisorSig: "",
+      kepsekSig: ""
+    },
+    submissions: [
+      {
+        id: "sub_1",
+        userId: "u_guru1",
+        nama: "Siti Aminah, S.Pd.I.",
+        nip: "19890312 201503 2 004",
+        mapel: "Pendidikan Agama Islam (PAI)",
+        kelas: "VIII-A / Genap",
+        tanggal: "2026-11-18",
+        tahun: "2026/2027",
+        deskripsi: "Pembelajaran materi Akhlak Terpuji menggunakan metode diskusi kelompok (Cooperative Learning) dan penayangan video teladan.",
+        checklist: [true, true, true, true, true, true, true, true, true, true, true],
+        photos: [],
+        guruSig: "",
+        assessed: true,
+        scoresA: [4, 4, 4, 4, 4, 3, 4, 4, 4, 3, 4, 3, 4, 4, 4],
+        notesA: Array(15).fill("Sangat baik & terstruktur"),
+        generalNoteA: "Perangkat pembelajaran lengkap dan pengaitan nilai ukrowi-duniawi sangat kuat.",
+        partB: COMPONENTS_PART_B.map(() => ({ ada: true, skor: 4 }))
+      },
+      {
+        id: "sub_2",
+        userId: "u_guru2",
+        nama: "Budi Santoso, S.Pd.",
+        nip: "19910721 201902 1 003",
+        mapel: "Ilmu Pengetahuan Alam (IPA)",
+        kelas: "VII-B / Ganjil",
+        tanggal: "2026-11-19",
+        tahun: "2026/2027",
+        deskripsi: "Praktikum pengamatan struktur sel tumbuhan menggunakan mikroskop cahaya di laboratorium IPA.",
+        checklist: [true, true, true, true, true, true, false, true, true, true, true],
+        photos: [],
+        guruSig: "",
+        assessed: false,
+        scoresA: Array(15).fill(3),
+        notesA: Array(15).fill(""),
+        generalNoteA: "",
+        partB: COMPONENTS_PART_B.map((_, idx) => ({ ada: idx !== 6, skor: idx !== 6 ? 3 : 2 }))
+      }
+    ]
+  };
+
+  let appState = loadState();
+  let currentUser = null;
+  let tempGuruPhotos = [];
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    const fresh = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+    return fresh;
+  }
+
+  function persistState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    } catch (e) {
+      showToast("⚠️ Penyimpanan penuh! Kurangi jumlah/ukuran foto.");
+    }
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.style.display = "block";
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => { el.style.display = "none"; }, 3200);
+  }
+
+  /* ==================== AUTHENTICATION LOGIC ==================== */
+  function switchAuthTab(tab) {
+    document.getElementById("authError").style.display = "none";
+    document.getElementById("tabLoginBtn").classList.toggle("active", tab === "login");
+    document.getElementById("tabRegBtn").classList.toggle("active", tab === "register");
+    document.getElementById("loginForm").style.display = tab === "login" ? "block" : "none";
+    document.getElementById("registerForm").style.display = tab === "register" ? "block" : "none";
+  }
+
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    if (inp.type === "password") { inp.type = "text"; btn.textContent = "Sembunyi"; }
+    else { inp.type = "password"; btn.textContent = "Lihat"; }
+  }
+
+  function quickLogin(username) {
+    const user = appState.users.find(u => u.username === username);
+    if (user) startSession(user);
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const role = document.getElementById("loginRole").value;
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+    const errEl = document.getElementById("authError");
+
+    const user = appState.users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.role === role);
+    if (!user || (user.password !== password && password !== "123456")) {
+      errEl.textContent = "Username, password, atau peran tidak sesuai. Gunakan password demo: 123456";
+      errEl.style.display = "block";
+      return;
+    }
+    errEl.style.display = "none";
+    startSession(user);
+  }
+
+  function handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById("regName").value.trim();
+    const nip = document.getElementById("regNip").value.trim();
+    const mapel = document.getElementById("regMapel").value.trim();
+    const username = document.getElementById("regUsername").value.trim();
+    const password = document.getElementById("regPassword").value.trim();
+    const errEl = document.getElementById("authError");
+
+    if (appState.users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+      errEl.textContent = "Username sudah digunakan. Silakan pilih username lain.";
+      errEl.style.display = "block";
+      return;
+    }
+
+    const newUser = {
+      id: "u_" + Date.now(),
+      username,
+      password,
+      role: "guru",
+      name,
+      nip,
+      mapel
+    };
+    appState.users.push(newUser);
+    persistState();
+    startSession(newUser);
+    showToast("✅ Akun guru berhasil dibuat!");
+  }
+
+  function startSession(user) {
+    currentUser = user;
+    sessionStorage.setItem("MITRA_GURU_SESSION", JSON.stringify(user));
+    document.getElementById("authScreen").style.display = "none";
+    document.getElementById("appShell").style.display = "flex";
+    document.getElementById("navUserName").textContent = user.name;
+    document.getElementById("navUserBadge").textContent = user.role === "kepsek" ? "👑 Kepala Sekolah" : "👩‍🏫 Guru";
+    setupNavigation();
+  }
+
+  function logout() {
+    currentUser = null;
+    sessionStorage.removeItem("MITRA_GURU_SESSION");
+    document.getElementById("appShell").style.display = "none";
+    document.getElementById("authScreen").style.display = "grid";
+  }
+
+  function setupNavigation() {
+    const nav = document.getElementById("mainNavBar");
+    if (currentUser.role === "guru") {
+      nav.innerHTML = `
+        <button class="nav-btn active" onclick="switchView('viewGuruUpload', this)">📤 Upload Dokumentasi & Perangkat</button>
+        <button class="nav-btn" onclick="switchView('viewGuruResult', this)">📊 Status & Hasil Supervisi Saya</button>
+      `;
+      initGuruForm();
+      switchView("viewGuruUpload", nav.children[0]);
+    } else {
+      nav.innerHTML = `
+        <button class="nav-btn active" onclick="switchView('viewKepsekAssess', this)">📋 Instrumen Penilaian Supervisi</button>
+        <button class="nav-btn" onclick="switchView('viewKepsekRecords', this)">📑 Rekam Nilai & TTD Kepala Sekolah</button>
+        <button class="nav-btn" onclick="switchView('viewKepsekUsers', this)">👥 Manajemen Akun</button>
+      `;
+      initKepsekViews();
+      switchView("viewKepsekAssess", nav.children[0]);
+    }
+  }
+
+  function switchView(viewId, btnEl) {
+    document.querySelectorAll(".app-view").forEach(v => v.style.display = "none");
+    document.getElementById(viewId).style.display = "block";
+    if (btnEl) {
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      btnEl.classList.add("active");
+    }
+    if (viewId === "viewGuruResult") renderGuruResult();
+    if (viewId === "viewKepsekRecords") renderRecordsTable();
+    if (viewId === "viewKepsekUsers") renderUsersTable();
+  }
+
+  /* ==================== SIGNATURE PAD ENGINE ==================== */
+  function initSignatureCanvas(canvasId, initialDataUrl) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    ctx.strokeStyle = "#0f172a";
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (initialDataUrl) {
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      img.src = initialDataUrl;
+    }
+
+    if (canvas.dataset.bound === "1") return;
+    canvas.dataset.bound = "1";
+    let drawing = false;
+
+    const getPos = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+      };
+    };
+
+    const start = (e) => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); };
+    const move = (e) => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); };
+    const end = () => { drawing = false; };
+
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", end);
+    canvas.addEventListener("touchstart", start, { passive: false });
+    canvas.addEventListener("touchmove", move, { passive: false });
+    canvas.addEventListener("touchend", end);
+  }
+
+  function clearCanvas(canvasId) {
+    const c = document.getElementById(canvasId);
+    c.getContext("2d").clearRect(0, 0, c.width, c.height);
+  }
+
+  function isCanvasBlank(canvas) {
+    const blank = document.createElement("canvas");
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    return canvas.toDataURL() === blank.toDataURL();
+  }
+
+  /* ==================== GURU PORTAL LOGIC ==================== */
+  function initGuruForm() {
+    const existing = appState.submissions.find(s => s.userId === currentUser.id);
+    document.getElementById("gNama").value = existing ? existing.nama : currentUser.name;
+    document.getElementById("gNip").value = existing ? existing.nip : (currentUser.nip || "-");
+    document.getElementById("gMapel").value = existing ? existing.mapel : (currentUser.mapel || "");
+    document.getElementById("gKelas").value = existing ? existing.kelas : "VIII-A / Genap";
+    document.getElementById("gTanggal").value = existing ? existing.tanggal : new Date().toISOString().slice(0, 10);
+    document.getElementById("gTahun").value = existing ? existing.tahun : "2026/2027";
+    document.getElementById("gDeskripsi").value = existing ? existing.deskripsi : "";
+
+    const badge = document.getElementById("guruFormStatusBadge");
+    if (existing) {
+      badge.textContent = existing.assessed ? "✅ Sudah Dinilai Kepala Sekolah" : "⏳ Terkirim (Menunggu Penilaian)";
+      badge.className = existing.assessed ? "badge badge-success" : "badge badge-warning";
+    }
+
+    const checks = existing ? existing.checklist : Array(COMPONENTS_PART_B.length).fill(true);
+    document.getElementById("guruChecklistGrid").innerHTML = COMPONENTS_PART_B.map((item, idx) => `
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+        <input type="checkbox" class="g-check-item" data-idx="${idx}" ${checks[idx] ? "checked" : ""} style="width:16px; height:16px; accent-color:var(--primary);" />
+        <span>${idx + 1}. ${item}</span>
+      </label>
+    `).join("");
+
+    tempGuruPhotos = existing && existing.photos ? [...existing.photos] : [];
+    renderGuruPhotos();
+    initSignatureCanvas("guruSigCanvas", existing ? existing.guruSig : "");
+  }
+
+  function handlePhotoUpload(e) {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxW = 720;
+          const scale = Math.min(1, maxW / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressed = canvas.toDataURL("image/jpeg", 0.72);
+          tempGuruPhotos.push({ name: file.name, dataUrl: compressed });
+          renderGuruPhotos();
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  }
+
+  function renderGuruPhotos() {
+    const grid = document.getElementById("guruPhotoPreview");
+    grid.innerHTML = tempGuruPhotos.map((p, idx) => `
+      <div class="photo-item">
+        <button type="button" class="remove-photo" onclick="removeGuruPhoto(${idx})">×</button>
+        <img src="${p.dataUrl}" onclick="openLightbox('${p.dataUrl}', '${p.name.replace(/'/g, "")}')" />
+        <div class="photo-caption">${p.name}</div>
+      </div>
+    `).join("");
+  }
+
+  function removeGuruPhoto(idx) {
+    tempGuruPhotos.splice(idx, 1);
+    renderGuruPhotos();
+  }
+
+  function saveGuruSubmission(e) {
+    e.preventDefault();
+    const checklist = Array.from(document.querySelectorAll(".g-check-item")).map(c => c.checked);
+    const sigCanvas = document.getElementById("guruSigCanvas");
+    const guruSig = isCanvasBlank(sigCanvas) ? "" : sigCanvas.toDataURL();
+
+    const idx = appState.submissions.findIndex(s => s.userId === currentUser.id);
+    const prev = idx >= 0 ? appState.submissions[idx] : null;
+
+    const record = {
+      id: prev ? prev.id : "sub_" + Date.now(),
+      userId: currentUser.id,
+      nama: document.getElementById("gNama").value.trim(),
+      nip: document.getElementById("gNip").value.trim(),
+      mapel: document.getElementById("gMapel").value.trim(),
+      kelas: document.getElementById("gKelas").value.trim(),
+      tanggal: document.getElementById("gTanggal").value,
+      tahun: document.getElementById("gTahun").value.trim(),
+      deskripsi: document.getElementById("gDeskripsi").value.trim(),
+      checklist,
+      photos: tempGuruPhotos,
+      guruSig: guruSig || (prev ? prev.guruSig : ""),
+      assessed: prev ? prev.assessed : false,
+      scoresA: prev ? prev.scoresA : Array(15).fill(3),
+      notesA: prev ? prev.notesA : Array(15).fill(""),
+      generalNoteA: prev ? prev.generalNoteA : "",
+      partB: checklist.map((ada, i) => ({
+        ada,
+        skor: prev && prev.partB[i] ? prev.partB[i].skor : (ada ? 3 : 1)
+      }))
+    };
+
+    if (idx >= 0) appState.submissions[idx] = record;
+    else appState.submissions.push(record);
+
+    persistState();
+    initGuruForm();
+    showToast("✅ Dokumentasi pembelajaran & tanda tangan berhasil dikirim!");
+  }
+
+  function renderGuruResult() {
+    const sub = appState.submissions.find(s => s.userId === currentUser.id);
+    const box = document.getElementById("guruResultContainer");
+    if (!sub) {
+      box.innerHTML = `<p style="color:var(--muted);">Anda belum mengunggah dokumentasi pembelajaran. Silakan isi form pada tab <b>Upload Dokumentasi & Perangkat</b>.</p>`;
+      return;
+    }
+
+    const calc = computeScores(sub);
+    box.innerHTML = `
+      <div class="grid-3" style="margin-bottom:18px;">
+        <div class="stat-card">
+          <div class="label">Status Penilaian</div>
+          <div style="margin-top:8px;">
+            <span class="badge ${sub.assessed ? 'badge-success' : 'badge-warning'}">
+              ${sub.assessed ? '✅ Selesai Dinilai & Disahkan' : '⏳ Menunggu Penilaian Kepala Sekolah'}
+            </span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Nilai Akhir Wawancara Awal (A)</div>
+          <div class="value">${sub.assessed ? calc.finalA.toFixed(2) : '-'}</div>
+          <div style="font-size:12px; color:var(--muted);">${sub.assessed ? calc.gradeA : 'Belum dinilai'}</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Nilai Persiapan Mengajar (B)</div>
+          <div class="value" style="color:var(--success);">${sub.assessed ? calc.finalB.toFixed(2) : '-'}</div>
+          <div style="font-size:12px; color:var(--muted);">Bukti Foto: ${sub.photos.length} file</div>
+        </div>
+      </div>
+      <div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:16px;">
+        <strong>Catatan Pembinaan Kepala Sekolah:</strong>
+        <p style="margin-top:6px; font-size:14px;">${sub.generalNoteA || 'Belum ada catatan pembinaan.'}</p>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="openOfficialReport('${sub.id}')">🖨️ Pratinjau & Cetak Lembar Hasil Supervisi Resmi</button>
+    `;
+  }
+
+  /* ==================== KEPALA SEKOLAH PORTAL LOGIC ==================== */
+  function initKepsekViews() {
+    const sel = document.getElementById("selectTeacherAssess");
+    sel.innerHTML = appState.submissions.map(s => `<option value="${s.id}">${s.nama} — ${s.mapel}</option>`).join("");
+    if (appState.submissions.length > 0) {
+      loadAssessmentForm(appState.submissions[0].id);
+    }
+
+    document.getElementById("signPlaceDate").value = appState.signatures.placeDate;
+    document.getElementById("supervisorNameInput").value = appState.signatures.supervisorName;
+    document.getElementById("kepsekNameInput").value = appState.signatures.kepsekName;
+    document.getElementById("kepsekNipInput").value = appState.signatures.kepsekNip;
+    document.getElementById("useStampCheck").checked = appState.signatures.useStamp;
+
+    initSignatureCanvas("supervisorSigCanvas", appState.signatures.supervisorSig);
+    initSignatureCanvas("kepsekSigCanvas", appState.signatures.kepsekSig);
+    renderRecordsTable();
+  }
+
+  function loadAssessmentForm(subId) {
+    const sub = appState.submissions.find(s => s.id === subId);
+    if (!sub) return;
+
+    document.getElementById("assessMetaInfo").textContent = `${sub.mapel} • ${sub.kelas} • ${sub.tanggal}`;
+    document.getElementById("assessDescText").textContent = sub.deskripsi || "Tidak ada deskripsi tambahan dari guru.";
+
+    const gal = document.getElementById("assessPhotoGallery");
+    if (sub.photos && sub.photos.length > 0) {
+      gal.innerHTML = sub.photos.map(p => `
+        <div class="photo-item">
+          <img src="${p.dataUrl}" onclick="openLightbox('${p.dataUrl}', '${p.name.replace(/'/g, "")}')" />
+          <div class="photo-caption">${p.name}</div>
+        </div>
+      `).join("");
+    } else {
+      gal.innerHTML = `<p style="font-size:13px; color:var(--muted);">Belum ada foto bukti pembelajaran yang diunggah oleh guru ini.</p>`;
+    }
+
+    // Render Part A
+    document.getElementById("tbodyPartA").innerHTML = QUESTIONS_PART_A.map((q, idx) => {
+      const curScore = sub.scoresA[idx] || 3;
+      const note = sub.notesA[idx] || "";
+      return `
+        <tr>
+          <td style="text-align:center; font-weight:700;">${idx + 1}</td>
+          <td>${q}</td>
+          ${[4, 3, 2, 1].map(val => `
+            <td class="score-radio-cell">
+              <input type="radio" name="scoreA_${idx}" value="${val}" ${curScore === val ? "checked" : ""} onchange="recalcLiveScores()" />
+            </td>
+          `).join("")}
+          <td><input type="text" class="form-control noteA-input" data-idx="${idx}" value="${note.replace(/"/g, '&quot;')}" placeholder="Catatan..." style="padding:5px 8px; font-size:12.5px;" /></td>
+        </tr>
+      `;
+    }).join("");
+
+    document.getElementById("generalNoteA").value = sub.generalNoteA || "";
+
+    // Render Part B
+    document.getElementById("tbodyPartB").innerHTML = COMPONENTS_PART_B.map((comp, idx) => {
+      const item = sub.partB[idx] || { ada: true, skor: 3 };
+      return `
+        <tr>
+          <td style="text-align:center; font-weight:700;">${idx + 1}</td>
+          <td>${comp}</td>
+          <td class="score-radio-cell"><input type="radio" name="adaB_${idx}" value="1" ${item.ada ? "checked" : ""} /></td>
+          <td class="score-radio-cell"><input type="radio" name="adaB_${idx}" value="0" ${!item.ada ? "checked" : ""} /></td>
+          ${[4, 3, 2, 1].map(val => `
+            <td class="score-radio-cell">
+              <input type="radio" name="scoreB_${idx}" value="${val}" ${item.skor === val ? "checked" : ""} onchange="recalcLiveScores()" />
+            </td>
+          `).join("")}
+        </tr>
+      `;
+    }).join("");
+
+    recalcLiveScores();
+  }
+
+  function getPredikat(score) {
+    if (score >= 91) return "Baik Sekali";
+    if (score >= 81) return "Baik";
+    if (score >= 71) return "Cukup";
+    return "Kurang";
+  }
+
+  function recalcLiveScores() {
+    let sumA = 0;
+    for (let i = 0; i < QUESTIONS_PART_A.length; i++) {
+      const checked = document.querySelector(`input[name="scoreA_${i}"]:checked`);
+      sumA += checked ? parseInt(checked.value, 10) : 0;
+    }
+    const finalA = (sumA / 60) * 100;
+    document.getElementById("totalScoreA").textContent = sumA;
+    document.getElementById("finalScoreA").textContent = finalA.toFixed(2);
+    document.getElementById("gradeBadgeA").innerHTML = `<span class="badge badge-info">${getPredikat(finalA)}</span>`;
+
+    let sumB = 0;
+    for (let j = 0; j < COMPONENTS_PART_B.length; j++) {
+      const checked = document.querySelector(`input[name="scoreB_${j}"]:checked`);
+      sumB += checked ? parseInt(checked.value, 10) : 0;
+    }
+    const finalB = (sumB / 44) * 100;
+    document.getElementById("totalScoreB").textContent = sumB;
+    document.getElementById("finalScoreB").textContent = finalB.toFixed(2);
+  }
+
+  function saveAssessment() {
+    const subId = document.getElementById("selectTeacherAssess").value;
+    const sub = appState.submissions.find(s => s.id === subId);
+    if (!sub) return;
+
+    sub.scoresA = QUESTIONS_PART_A.map((_, i) => {
+      const el = document.querySelector(`input[name="scoreA_${i}"]:checked`);
+      return el ? parseInt(el.value, 10) : 3;
+    });
+    sub.notesA = Array.from(document.querySelectorAll(".noteA-input")).map(inp => inp.value.trim());
+    sub.generalNoteA = document.getElementById("generalNoteA").value.trim();
+
+    sub.partB = COMPONENTS_PART_B.map((_, j) => {
+      const adaEl = document.querySelector(`input[name="adaB_${j}"]:checked`);
+      const skorEl = document.querySelector(`input[name="scoreB_${j}"]:checked`);
+      return {
+        ada: adaEl ? adaEl.value === "1" : true,
+        skor: skorEl ? parseInt(skorEl.value, 10) : 3
+      };
+    });
+
+    sub.assessed = true;
+    persistState();
+    renderRecordsTable();
+    showToast("✅ Penilaian supervisi berhasil disimpan!");
+  }
+
+  function computeScores(sub) {
+    const sumA = (sub.scoresA || []).reduce((a, b) => a + b, 0);
+    const finalA = (sumA / 60) * 100;
+    const sumB = (sub.partB || []).reduce((a, b) => a + (b.skor || 0), 0);
+    const finalB = (sumB / 44) * 100;
+    const avg = (finalA + finalB) / 2;
+    return { sumA, finalA, gradeA: getPredikat(finalA), sumB, finalB, avg, gradeAvg: getPredikat(avg) };
+  }
+
+  function renderRecordsTable() {
+    const query = (document.getElementById("searchRecordInput")?.value || "").toLowerCase();
+    const filtered = appState.submissions.filter(s =>
+      s.nama.toLowerCase().includes(query) || s.mapel.toLowerCase().includes(query)
+    );
+
+    const doneList = appState.submissions.filter(s => s.assessed);
+    const avgAll = doneList.length
+      ? doneList.reduce((acc, s) => acc + computeScores(s).avg, 0) / doneList.length
+      : 0;
+
+    document.getElementById("statTotal").textContent = appState.submissions.length;
+    document.getElementById("statDone").textContent = doneList.length;
+    document.getElementById("statPending").textContent = appState.submissions.length - doneList.length;
+    document.getElementById("statAvg").textContent = avgAll.toFixed(1);
+
+    const hasKepsekSign = Boolean(appState.signatures.kepsekSig);
+
+    document.getElementById("tbodyRecords").innerHTML = filtered.map((s, idx) => {
+      const c = computeScores(s);
+      return `
+        <tr>
+          <td style="text-align:center;">${idx + 1}</td>
+          <td><strong>${s.nama}</strong><br/><span style="font-size:12px; color:var(--muted);">NIP. ${s.nip}</span></td>
+          <td>${s.mapel}<br/><span style="font-size:12px; color:var(--muted);">${s.kelas}</span></td>
+          <td style="text-align:center;"><span class="badge badge-info">${(s.photos || []).length} Foto</span></td>
+          <td style="text-align:center;">${s.assessed ? `<strong>${c.finalA.toFixed(2)}</strong><br/><small>${c.gradeA}</small>` : '-'}</td>
+          <td style="text-align:center;">${s.assessed ? `<strong>${c.finalB.toFixed(2)}</strong>` : '-'}</td>
+          <td style="text-align:center;">
+            ${s.assessed ? `<span class="badge badge-success">${c.avg.toFixed(2)} (${c.gradeAvg})</span>` : `<span class="badge badge-warning">Menunggu</span>`}
+          </td>
+          <td style="text-align:center;">
+            ${hasKepsekSign ? `<span class="badge badge-success">✍️ Tertandatangani</span>` : `<span class="badge badge-warning">Belum TTD</span>`}
+          </td>
+          <td style="text-align:center; white-space:nowrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="jumpToAssess('${s.id}')">Nilai</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="openOfficialReport('${s.id}')">🖨️ Cetak</button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function jumpToAssess(subId) {
+    document.getElementById("selectTeacherAssess").value = subId;
+    loadAssessmentForm(subId);
+    switchView("viewKepsekAssess", document.getElementById("mainNavBar").children[0]);
+  }
+
+  function saveSignatures() {
+    appState.signatures.placeDate = document.getElementById("signPlaceDate").value.trim();
+    appState.signatures.supervisorName = document.getElementById("supervisorNameInput").value.trim();
+    appState.signatures.kepsekName = document.getElementById("kepsekNameInput").value.trim();
+    appState.signatures.kepsekNip = document.getElementById("kepsekNipInput").value.trim();
+    appState.signatures.useStamp = document.getElementById("useStampCheck").checked;
+
+    const supC = document.getElementById("supervisorSigCanvas");
+    const kepC = document.getElementById("kepsekSigCanvas");
+    if (!isCanvasBlank(supC)) appState.signatures.supervisorSig = supC.toDataURL();
+    if (!isCanvasBlank(kepC)) appState.signatures.kepsekSig = kepC.toDataURL();
+
+    persistState();
+    renderRecordsTable();
+    showToast("✅ Tanda tangan & stempel Kepala Sekolah berhasil disimpan!");
+  }
+
+  /* ==================== OFFICIAL REPORT & PRINT ==================== */
+  function openOfficialReport(subId) {
+    const sub = appState.submissions.find(s => s.id === subId);
+    if (!sub) return;
+    const c = computeScores(sub);
+    const sig = appState.signatures;
+
+    const rowsA = QUESTIONS_PART_A.map((q, i) => {
+      const sc = sub.scoresA[i] || 0;
+      return `
+        <tr>
+          <td style="text-align:center;">${i + 1}</td>
+          <td>${q}</td>
+          <td style="text-align:center;">${sc === 4 ? '✓' : ''}</td>
+          <td style="text-align:center;">${sc === 3 ? '✓' : ''}</td>
+          <td style="text-align:center;">${sc === 2 ? '✓' : ''}</td>
+          <td style="text-align:center;">${sc === 1 ? '✓' : ''}</td>
+          <td>${sub.notesA[i] || ''}</td>
+        </tr>
+      `;
+    }).join("");
+
+    const rowsB = COMPONENTS_PART_B.map((comp, j) => {
+      const item = sub.partB[j] || { ada: true, skor: 3 };
+      return `
+        <tr>
+          <td style="text-align:center;">${j + 1}</td>
+          <td>${comp}</td>
+          <td style="text-align:center;">${item.ada ? '✓' : ''}</td>
+          <td style="text-align:center;">${!item.ada ? '✓' : ''}</td>
+          <td style="text-align:center;">${item.skor === 4 ? '✓' : ''}</td>
+          <td style="text-align:center;">${item.skor === 3 ? '✓' : ''}</td>
+          <td style="text-align:center;">${item.skor === 2 ? '✓' : ''}</td>
+          <td style="text-align:center;">${item.skor === 1 ? '✓' : ''}</td>
+        </tr>
+      `;
+    }).join("");
+
+    const photoSection = (sub.photos && sub.photos.length > 0) ? `
+      <div style="margin-top:16px; page-break-inside:avoid;">
+        <strong style="font-size:13px;">LAMPIRAN BUKTI DOKUMENTASI PEMBELAJARAN KELAS:</strong>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-top:8px;">
+          ${sub.photos.slice(0, 6).map(p => `
+            <div style="border:1px solid #000; padding:4px; text-align:center;">
+              <img src="${p.dataUrl}" style="width:100%; height:110px; object-fit:cover;" />
+              <div style="font-size:10px; margin-top:2px;">${p.name}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    ` : "";
+
+    document.getElementById("printArea").innerHTML = `
+      <h2>INSTRUMEN SUPERVISI GURU</h2>
+      <h2>SMP NEGERI MARGATUNGGAL</h2>
+      <h3>T.P. ${sub.tahun}</h3>
+
+      <table class="official-meta">
+        <tr><td style="width:170px;">Nama Guru</td><td>: <strong>${sub.nama}</strong></td></tr>
+        <tr><td>Mata Pelajaran</td><td>: ${sub.mapel}</td></tr>
+        <tr><td>Kelas / Semester</td><td>: ${sub.kelas}</td></tr>
+        <tr><td>Tanggal pelaksanaan</td><td>: ${sub.tanggal}</td></tr>
+      </table>
+
+      <div style="font-weight:bold; font-size:13.5px; margin-top:10px;">
+        A. INSTRUMEN PRASUPERVISI (Wawancara Awal & Pemeriksaan Administrasi Pembelajaran)
+      </div>
+      <table class="official-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:30px;">No</th>
+            <th rowspan="2">Pertanyaan</th>
+            <th colspan="4">Skor Jawaban</th>
+            <th rowspan="2" style="width:160px;">Catatan</th>
+          </tr>
+          <tr>
+            <th style="width:28px;">4</th><th style="width:28px;">3</th><th style="width:28px;">2</th><th style="width:28px;">1</th>
+          </tr>
+        </thead>
+        <tbody>${rowsA}</tbody>
+        <tfoot>
+          <tr class="sum">
+            <td colspan="2" style="text-align:center;">TOTAL NILAI</td>
+            <td colspan="4" style="text-align:center;">${c.sumA}</td>
+            <td>Max: 60</td>
+          </tr>
+          <tr class="sum">
+            <td colspan="2" style="text-align:center;">NILAI AKHIR WAWANCARA AWAL (Total Nilai / Nilai Max (60)) * 100</td>
+            <td colspan="4" style="text-align:center;">${c.finalA.toFixed(2)}</td>
+            <td style="text-align:center;">${c.gradeA}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <table class="official-table" style="margin-top:8px;">
+        <tr>
+          <td style="width:28%;">
+            <strong>Keterangan :</strong><br/>
+            4 : Sangat Baik<br/>
+            3 : Baik<br/>
+            2 : Cukup<br/>
+            1 : Kurang
+          </td>
+          <td style="width:32%;">
+            <strong>Keterangan Nilai Akhir :</strong><br/>
+            91–100 = Baik Sekali<br/>
+            81–90 = Baik<br/>
+            71–80 = Cukup<br/>
+            &lt; 71 = Kurang
+          </td>
+          <td style="vertical-align:top;">
+            <strong>Catatan :</strong><br/>
+            ${sub.generalNoteA || '-'}
+          </td>
+        </tr>
+      </table>
+
+      <div style="font-weight:bold; font-size:13.5px; margin-top:14px;">
+        B. PERSIAPAN MENGAJAR (Kelengkapan Perangkat Pembelajaran)
+      </div>
+      <table class="official-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:30px;">No</th>
+            <th rowspan="2">Komponen</th>
+            <th colspan="2">Dokumen *</th>
+            <th colspan="4">Skor **</th>
+          </tr>
+          <tr>
+            <th style="width:45px;">Ada</th><th style="width:45px;">Tidak</th>
+            <th style="width:28px;">4</th><th style="width:28px;">3</th><th style="width:28px;">2</th><th style="width:28px;">1</th>
+          </tr>
+        </thead>
+        <tbody>${rowsB}</tbody>
+        <tfoot>
+          <tr class="sum">
+            <td colspan="4" style="text-align:center;">NILAI AKHIR PERSIAPAN MENGAJAR ((Total / 44) * 100)</td>
+            <td colspan="4" style="text-align:center;">${c.finalB.toFixed(2)} (${getPredikat(c.finalB)})</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      ${photoSection}
+
+      <table class="sig-print-table">
+        <tr>
+          <td>
+            Yang Disupervisi,<br/>
+            ${sub.guruSig ? `<img src="${sub.guruSig}" style="height:55px; margin:4px 0;" />` : `<div style="height:58px;"></div>`}
+            <div style="border-bottom:1px dotted #000; font-weight:bold;">${sub.nama}</div>
+            <div style="font-size:11px;">NIP. ${sub.nip}</div>
+          </td>
+          <td>
+            Supervisor,<br/>
+            ${sig.supervisorSig ? `<img src="${sig.supervisorSig}" style="height:55px; margin:4px 0;" />` : `<div style="height:58px;"></div>`}
+            <div style="border-bottom:1px dotted #000; font-weight:bold;">${sig.supervisorName}</div>
+          </td>
+          <td>
+            ${sig.placeDate}<br/>
+            Mengetahui,<br/>
+            Kepala Sekolah
+            ${sig.useStamp ? `<div class="school-stamp">PEMERINTAH KAB.<br/>SMP NEGERI<br/>MARGATUNGGAL<br/>JAYALOKA</div>` : ''}
+            ${sig.kepsekSig ? `<img src="${sig.kepsekSig}" style="height:50px; display:block; margin:2px auto;" />` : `<div style="height:50px;"></div>`}
+            <div style="border-bottom:1px dotted #000; font-weight:bold;">${sig.kepsekName}</div>
+            <div style="font-size:11px;">${sig.kepsekNip}</div>
+          </td>
+        </tr>
+      </table>
+    `;
+
+    document.getElementById("reportModal").style.display = "flex";
+  }
+
+  function openLightbox(src, caption) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightboxCaption").textContent = caption;
+    document.getElementById("photoModal").style.display = "flex";
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+  }
+
+  /* ==================== USER MANAGEMENT ==================== */
+  function renderUsersTable() {
+    document.getElementById("tbodyUsers").innerHTML = appState.users.map((u, idx) => `
+      <tr>
+        <td style="text-align:center;">${idx + 1}</td>
+        <td><strong>${u.name}</strong></td>
+        <td style="text-align:center;"><span class="badge ${u.role === 'kepsek' ? 'badge-warning' : 'badge-info'}">${u.role === 'kepsek' ? 'Kepala Sekolah' : 'Guru'}</span></td>
+        <td><code>${u.username}</code></td>
+        <td>${u.nip || '-'} • ${u.mapel || '-'}</td>
+        <td style="text-align:center;">
+          ${u.role === 'kepsek' ? '<span style="font-size:12px; color:var(--muted);">Akun Utama</span>' : `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">Hapus</button>`}
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  function deleteUser(id) {
+    appState.users = appState.users.filter(u => u.id !== id);
+    persistState();
+    renderUsersTable();
+    showToast("Akun berhasil dihapus.");
+  }
+
+  function resetDemoData() {
+    localStorage.removeItem(STORAGE_KEY);
+    appState = loadState();
+    initKepsekViews();
+    renderUsersTable();
+    showToast("🔄 Data berhasil dikembalikan ke pengaturan awal demo!");
+  }
+
+  /* ==================== AUTO RESTORE SESSION ==================== */
+  window.addEventListener("DOMContentLoaded", () => {
+    try {
+      const savedSession = sessionStorage.getItem("MITRA_GURU_SESSION");
+      if (savedSession) {
+        const parsed = JSON.parse(savedSession);
+        const validUser = appState.users.find(u => u.id === parsed.id);
+        if (validUser) startSession(validUser);
+      }
+    } catch (e) {}
+  });
+</script>
+</body>
+</html>
